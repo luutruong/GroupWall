@@ -1,0 +1,21 @@
+<xf:wrap template="tl_groups_group_wrapper">
+    <xf:set var="$pageSelected">newsFeed</xf:set>
+</xf:wrap>
+
+<xf:macro template="lightbox_macros" name="setup" arg-canViewAttachments="{{ true }}" />
+
+<div class="block block--messages" data-xf-init="{{ $canInlineMod ? 'inline-mod' : '' }}"
+     data-type="tl_group_wall_post"
+     data-href="{{ link('inline-mod') }}">
+    <div class="block-container">
+        <div class="block-body js-newPostsContainer">
+            <xf:macro template="tl_group_wall_post_macros"
+                      name="post"
+                      arg-post="{$post}" />
+        </div>
+    </div>
+
+    <div class="block-outer block-outer--after">
+        <xf:pagenav link="groups/feeds" data="{$group}" page="{$page}" perpage="{$perPage}" total="{$total}" />
+    </div>
+</div>

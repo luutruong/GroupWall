@@ -1,0 +1,47 @@
+<xf:title>{{ phrase('tl_group_wall_edit_comment') }}</xf:title>
+
+<xf:if is="!$quickEdit">
+    <xf:wrap template="tl_groups_group_wrapper">
+        <xf:set var="$pageSelected">newsFeed</xf:set>
+    </xf:wrap>
+</xf:if>
+
+<xf:form action="{{ link('groups/wall-comments/edit', $comment) }}"
+         data-xf-init="attachment-manager"
+         class="block" ajax="true">
+    <div class="block-container">
+        <div class="block-body">
+            <span class="u-anchorTarget js-editContainer"></span>
+            <xf:if is="$comment.isFirstComment()">
+                <xf:editorrow name="message"
+                              attachments="{$attachmentData.attachments}"
+                              rowtype="{{ $quickEdit ? 'fullWidth noLabel' : '' }}"
+                              label="{{ phrase('message') }}"
+                              value="{$comment.message}" />
+
+                <xf:formrow rowtype="{{ $quickEdit ? 'fullWidth noLabel' : '' }}">
+                    <xf:if is="$attachmentData">
+                        <xf:macro template="helper_attach_upload" name="upload_block" arg-attachmentData="{$attachmentData}" />
+                    </xf:if>
+                </xf:formrow>
+            <xf:else />
+                <xf:textarearow name="message" value="{$comment.message}" autosize="true"
+                                rowtype="{{ $quickEdit ? 'fullWidth noLabel' : '' }}"
+                                maxlength="{$xf.options.profilePostMaxLength}"
+                                label="{{ phrase('message') }}" />
+            </xf:if>
+
+        </div>
+        <xf:submitrow icon="save" sticky="true" rowtype="{{ $quickEdit ? 'simple' : '' }}">
+            <xf:html>
+                <xf:if is="$quickEdit">
+                    <xf:button class="js-cancelButton">{{ phrase('button.cancel') }}</xf:button>
+                </xf:if>
+            </xf:html>
+        </xf:submitrow>
+    </div>
+
+    <xf:if is="$noInlineMod">
+        <xf:hiddenval name="_xfNoInlineMod">1</xf:hiddenval>
+    </xf:if>
+</xf:form>

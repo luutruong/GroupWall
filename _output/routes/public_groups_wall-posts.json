@@ -1,0 +1,11 @@
+{
+    "route_type": "public",
+    "route_prefix": "groups",
+    "sub_name": "wall-posts",
+    "format": "wall-posts/:int<post_id>",
+    "build_class": "",
+    "build_method": "",
+    "controller": "Truonglv\\GroupWall:Post",
+    "context": "tl_groups",
+    "action_prefix": ""
+}

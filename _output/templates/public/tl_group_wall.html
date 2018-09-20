@@ -1,0 +1,58 @@
+<xf:title>{$group.name}</xf:title>
+
+<xf:wrap template="tl_groups_group_wrapper">
+    <xf:set var="$pageSelected">newsFeed</xf:set>
+</xf:wrap>
+
+<xf:form action="{{ link('groups/wall-posts/comment') }}"
+         ajax="true"
+         class="block js-quickReply"
+         data-xf-init="attachment-manager quick-reply"
+         data-ascending="false"
+         data-message-container=".js-newPostsContainer">
+
+    <xf:js src="xf/message.js" min="1" />
+    <xf:set var="$lastPost" value="{$posts|last}" />
+
+    <div class="block-container">
+        <div class="block-body">
+            <xf:macro template="quick_reply_macros" name="body"
+                      arg-message=""
+                      arg-attachmentData="{$attachmentData}"
+                      arg-forceHash="{$attachmentHash}"
+                      arg-messageSelector=".js-post"
+                      arg-multiQuoteStorageKey="multiQuoteThread"
+                      arg-lastDate="{$lastPost.post_date}"
+                      arg-showPreviewButton="{{ false }}"
+                      arg-submitText="{{ phrase('post_verb') }}"
+                      arg-lastKnownDate="{$thread.last_post_date}" />
+        </div>
+    </div>
+
+    <xf:hiddenval name="group_id">{$group.group_id}</xf:hiddenval>
+</xf:form>
+
+<xf:macro template="lightbox_macros" name="setup" arg-canViewAttachments="{{ true }}" />
+
+<div class="block block--messages" data-xf-init="{{ $canInlineMod ? 'inline-mod' : '' }}"
+     data-type="tl_group_wall_post"
+     data-href="{{ link('inline-mod') }}">
+    <div class="block-container lbContainer"
+         data-xf-init="lightbox"
+         data-message-selector=".js-post"
+         data-lb-id="group-{$group.group_id}"
+         data-lb-universal="{$xf.options.lightBoxUniversal}">
+
+        <div class="block-body js-newPostsContainer">
+            <xf:foreach loop="$posts" value="$post">
+                <xf:macro template="tl_group_wall_post_macros"
+                          name="post"
+                          arg-post="{$post}" arg-showCommentLoader="{{ true }}" />
+            </xf:foreach>
+        </div>
+    </div>
+
+    <div class="block-outer block-outer--after">
+        <xf:pagenav link="groups/feeds" data="{$group}" page="{$page}" perpage="{$perPage}" total="{$total}" />
+    </div>
+</div>

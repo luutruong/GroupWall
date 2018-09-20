@@ -1,0 +1,6 @@
+{
+    "from_class": "Truonglv\\Groups\\Pub\\Controller\\Group",
+    "to_class": "Truonglv\\GroupWall\\Groups\\Pub\\Controller\\Group",
+    "execute_order": 10,
+    "active": true
+}

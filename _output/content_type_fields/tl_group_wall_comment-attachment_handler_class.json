@@ -1,0 +1,5 @@
+{
+    "content_type": "tl_group_wall_comment",
+    "field_name": "attachment_handler_class",
+    "field_value": "Truonglv\\GroupWall\\Attachment\\Comment"
+}

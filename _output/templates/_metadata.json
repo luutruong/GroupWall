@@ -1,0 +1,42 @@
+{
+    "public/tl_group_wall.html": {
+        "version_id": 1000000,
+        "version_string": "1.0.0",
+        "hash": "39d6f4bee8e29e176924833043af3e05"
+    },
+    "public/tl_group_wall_alert_comment_like.html": {
+        "version_id": 1000000,
+        "version_string": "1.0.0",
+        "hash": "d2689b4862f4068ab7f4987771f17dc7"
+    },
+    "public/tl_group_wall_comment.html": {
+        "version_id": 1000000,
+        "version_string": "1.0.0",
+        "hash": "24accb9c83dd5d022b9f2c1a22d4ac24"
+    },
+    "public/tl_group_wall_comment_edit.html": {
+        "version_id": 1000100,
+        "version_string": "1.0.1",
+        "hash": "e4fa8cda771af659ead272ddedd2b197"
+    },
+    "public/tl_group_wall_comments.html": {
+        "version_id": 1000000,
+        "version_string": "1.0.0",
+        "hash": "f5d5adda7318da688ac97614bcc32203"
+    },
+    "public/tl_group_wall_post.html": {
+        "version_id": 1000000,
+        "version_string": "1.0.0",
+        "hash": "e17d8d116247e843e0d768d5c0bf41bb"
+    },
+    "public/tl_group_wall_post_macros.html": {
+        "version_id": 1000000,
+        "version_string": "1.0.0",
+        "hash": "3f87eb2ebe21721fe2ab00e72a8f7823"
+    },
+    "public/tl_group_wall_post_show.html": {
+        "version_id": 1000100,
+        "version_string": "1.0.1",
+        "hash": "16f9320fbeb4433182ada34bb971d1dc"
+    }
+}

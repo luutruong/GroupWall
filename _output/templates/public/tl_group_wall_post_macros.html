@@ -1,0 +1,320 @@
+<xf:macro name="post" arg-post="!" arg-showCommentLoader="{{ false }}">
+    <xf:css src="message.less" />
+    <xf:js src="xf/comment.js" min="1" />
+
+<article class="message js-post message--simple js-inlineModContainer{{ $post.isIgnored() ? ' is-ignored' : '' }}"
+         id="js-post-{$post.post_id}"
+         data-author="{{ $post.User.username ?: $post.username }}"
+         data-content="post-{$post.post_id}">
+    <span class="u-anchorTarget" id="post-{$post.post_id}"></span>
+    <div class="message-inner">
+        <div class="message-cell message-cell--user">
+            <xf:macro template="message_macros"
+                      name="user_info_simple"
+                      arg-user="{$post.User}"
+                      arg-fallbackName="{$post.username}" />
+        </div>
+
+        <div class="message-cell message-cell--main">
+            <div class="message-main js-quickEditTarget">
+                <div class="message-content js-messageContent">
+                    <header class="message-attribution message-attribution--plain">
+                        <ul class="listInline listInline--bullet">
+                            <li class="message-attribution-user">
+                                <xf:avatar user="$post.User" size="xxs" />
+                                <h4 class="attribution"><xf:username user="$post.User" rich="true" defaultname="{$post.username}" /></h4>
+                            </li>
+                            <li><a href="{{ link('groups/wall-posts', $post) }}"
+                                   class="u-concealed" rel="nofollow"><xf:date time="$post.post_date" /></a></li>
+                        </ul>
+                    </header>
+
+                    <xf:if is="$post.FirstComment.message_state == 'deleted'">
+                        <div class="messageNotice messageNotice--deleted">
+                            <xf:macro template="deletion_macros" name="notice" arg-log="{$profilePost.DeletionLog}" />
+                        </div>
+                    <xf:elseif is="$post.FirstComment.message_state == 'moderated'" />
+                        <div class="messageNotice messageNotice--moderated">
+                            {{ phrase('this_message_is_awaiting_moderator_approval_and_is_invisible_to_normal') }}
+                        </div>
+                    </xf:if>
+                    <xf:if is="$post.isIgnored()">
+                        <div class="messageNotice messageNotice--ignored">
+                            {{ phrase('you_are_ignoring_content_by_this_member') }}
+                            <xf:showignored />
+                        </div>
+                    </xf:if>
+
+                    <div class="message-userContent lbContainer js-lbContainer {{ $post.isIgnored() ? 'is-ignored' : '' }}"
+                         data-lb-id="post-{$post.post_id}"
+                         data-lb-caption-desc="{{ $post.User ? $post.User.username : $post.username }} &middot; {{ date_time($post.post_date) }}">
+                        <article class="message-body">
+                            {{ bb_code($post.FirstComment.message, 'tl_group_wall_comment', $post.FirstComment) }}
+                        </article>
+
+                        <xf:if is="$post.FirstComment.attach_count">
+                            <xf:macro template="message_macros" name="attachments"
+                                      arg-attachments="{$post.FirstComment.Attachments}"
+                                      arg-message="{$post.FirstComment}"
+                                      arg-canView="{{ true }}" />
+                        </xf:if>
+                    </div>
+                </div>
+
+                <footer class="message-footer">
+                    <div class="message-actionBar actionBar">
+                        <xf:if contentcheck="true">
+                            <div class="actionBar-set actionBar-set--external">
+                                <xf:contentcheck>
+                                    <xf:if is="$post.FirstComment.canLike()">
+                                        <a href="{{ link('groups/wall-comments/like', $post.FirstComment) }}"
+                                           class="actionBar-action actionBar-action--like" data-xf-click="like"
+                                           data-like-list="< .message | .js-likeList"><xf:if is="$post.FirstComment.isLiked()">{{ phrase('unlike') }}<xf:else />{{ phrase('like') }}</xf:if></a>
+                                    </xf:if>
+                                    <xf:if is="$post.canComment()">
+                                        <a class="actionBar-action actionBar-action--reply"
+                                           data-xf-click="toggle"
+                                           data-target=".js-commentsTarget-{$post.post_id}"
+                                           data-scroll-to="true"
+                                           role="button"
+                                           tabindex="0">{{ phrase('comment') }}</a>
+                                    </xf:if>
+                                </xf:contentcheck>
+                            </div>
+                        </xf:if>
+
+                        <xf:if contentcheck="true">
+                            <div class="actionBar-set actionBar-set--internal">
+                                <xf:contentcheck>
+                                    <xf:if is="{$allowInlineMod} AND $post.canUseInlineModeration()">
+                                        <xf:checkbox standalone="true"><xf:option
+                                                value="{$post.post_id}"
+                                                labelclass="actionBar-action actionBar-action--inlineMod"
+                                                class="js-inlineModToggle"
+                                                data-xf-init="tooltip"
+                                                title="{{ phrase('select_for_moderation') }}" />
+                                        </xf:checkbox>
+                                    </xf:if>
+                                    <xf:if is="$post.FirstComment.canReport()">
+                                        <a href="{{ link('groups/wall-comments/report', $profilePost) }}"
+                                           class="actionBar-action actionBar-action--report" data-xf-click="overlay">{{ phrase('report') }}</a>
+                                    </xf:if>
+
+                                    <xf:set var="$hasActionBarMenu" value="{{ false }}" />
+                                    <xf:if is="$post.FirstComment.canEdit()">
+                                        <xf:js src="xf/message.js" min="1" />
+                                        <a href="{{ link('groups/wall-comments/edit', $post.FirstComment) }}"
+                                           class="actionBar-action actionBar-action--edit actionBar-action--menuItem"
+                                           data-xf-click="quick-edit"
+                                           data-editor-target="#js-post-{$post.post_id} .js-quickEditTarget"
+                                           data-no-inline-mod="{{ !$allowInlineMod ? 1 : 0 }}"
+                                           data-menu-closer="true">{{ phrase('edit') }}</a>
+                                        <xf:set var="$hasActionBarMenu" value="{{ true }}" />
+                                    </xf:if>
+                                    <xf:if is="$post.FirstComment.canDelete()">
+                                        <a href="{{ link('groups/wall-comments/delete', $post.FirstComment) }}"
+                                           class="actionBar-action actionBar-action--delete actionBar-action--menuItem"
+                                           data-xf-click="overlay">{{ phrase('delete') }}</a>
+                                        <xf:set var="$hasActionBarMenu" value="{{ true }}" />
+                                    </xf:if>
+
+                                    <xf:if is="$hasActionBarMenu">
+                                        <a class="actionBar-action actionBar-action--menuTrigger"
+                                           data-xf-click="menu"
+                                           title="{{ phrase('more_options')|for_attr }}"
+                                           role="button"
+                                           tabindex="0"
+                                           aria-expanded="false"
+                                           aria-haspopup="true">&#8226;&#8226;&#8226;</a>
+                                        <div class="menu" data-menu="menu" aria-hidden="true" data-menu-builder="actionBar">
+                                            <div class="menu-content">
+                                                <h4 class="menu-header">{{ phrase('more_options') }}</h4>
+                                                <div class="js-menuBuilderTarget"></div>
+                                            </div>
+                                        </div>
+                                    </xf:if>
+                                </xf:contentcheck>
+                            </div>
+                        </xf:if>
+
+                    </div>
+
+                    <section class="message-responses js-messageResponses">
+                        <div class="message-responseRow message-responseRow--likes js-likeList {{ $post.FirstComment.likes ? 'is-active' : '' }}"><xf:if is="$post.FirstComment.likes">
+                            <xf:likes content="{$post.FirstComment}" url="{{ link('groups/wall-comments/likes', $post.FirstComment) }}" />
+                        </xf:if></div>
+
+                        <div class="js-replyNewMessageContainer">
+                            <xf:if is="$showCommentLoader && $post.comment_count > 5">
+                                <xf:set var="$loadBeforePosition">{{ $post.Comments.first().position }}</xf:set>
+                                <div class="message-responseRow u-jsOnly js-commentLoader">
+                                    <a data-href="{{ link('groups/wall-posts/load-comments', $post, {'before': $loadBeforePosition}) }}"
+                                       data-container=".js-commentLoader"
+                                       data-xf-click="comment-loader">
+                                        <i class="fa fa-long-arrow-up" aria-hidden="true"></i>
+                                        {{ phrase('view_previous_comments...') }}
+                                    </a>
+                                </div>
+                            </xf:if>
+
+                            <xf:foreach loop="$post.Comments" value="$comment">
+                                <xf:macro
+                                        name="{{ $comment.message_state == 'deleted' ? 'comment_row_deleted' : 'comment_row' }}"
+                                        arg-comment="{$comment}" />
+                            </xf:foreach>
+                        </div>
+
+                        <xf:if is="$post.canComment()">
+                            <xf:js src="xf/message.js" min="1" />
+                            <div class="message-responseRow js-commentsTarget-{$post.post_id} toggleTarget">
+                                <xf:form action="{{ link('groups/wall-posts/comment', $post) }}" ajax="true" class="comment"
+                                         data-xf-init="quick-reply"
+                                         data-message-container="< .js-messageResponses | .js-replyNewMessageContainer">
+                                    <div class="comment-inner">
+											<span class="comment-avatar">
+												<xf:avatar user="{$xf.visitor}" size="xxs" />
+											</span>
+                                        <div class="comment-main">
+                                            <xf:textarea name="message" rows="1" autosize="true"
+                                                         maxlength="{$xf.options.profilePostMaxLength}"
+                                                         class="comment-input js-editor"
+                                                         data-xf-init="user-mentioner"
+                                                         data-toggle-autofocus="1"
+                                                         placeholder="{{ phrase('write_comment...') }}" />
+                                            <div>
+                                                <xf:button type="submit" class="button--primary button--small">
+                                                    {{ phrase('post_comment') }}
+                                                </xf:button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <xf:comment>
+                                        <xf:set var="$lastProfilePostComment" value="{$profilePost.LatestComments|last}" />
+                                        <xf:hiddenval name="last_date">{$lastProfilePostComment.comment_date}</xf:hiddenval>
+                                    </xf:comment>
+                                </xf:form>
+                            </div>
+                        </xf:if>
+                    </section>
+                </footer>
+            </div>
+        </div>
+    </div>
+</article>
+</xf:macro>
+
+<xf:macro name="comment_row" arg-comment="!">
+    <div class="message-responseRow js-post {{ $comment.isIgnored() ? 'is-ignored' : '' }}">
+        <div class="comment"
+             data-author="{$comment.User.username}"
+             data-content="comment-{$comment.comment_id}"
+             id="js-comment-{$comment.comment_id}">
+
+            <div class="comment-inner">
+				<span class="comment-avatar">
+					<xf:avatar user="$comment.User" size="xxs" defaultname="{$comment.username}" />
+				</span>
+                <div class="comment-main">
+                    <span class="u-anchorTarget" id="comment-{$comment.comment_id}"></span>
+                    <div class="js-quickEditTargetComment">
+                        <div class="comment-content">
+                            <xf:if is="$comment.message_state == 'deleted'">
+                                <div class="messageNotice messageNotice--deleted">
+                                    <xf:macro template="deletion_macros" name="notice" arg-log="{$comment.DeletionLog}" />
+                                </div>
+                            <xf:elseif is="$comment.message_state == 'moderated'" />
+                                <div class="messageNotice messageNotice--moderated">
+                                    {{ phrase('this_message_is_awaiting_moderator_approval_and_is_invisible_to_normal') }}
+                                </div>
+                            </xf:if>
+                            <xf:if is="$comment.isIgnored()">
+                                <div class="messageNotice messageNotice--ignored">
+                                    {{ phrase('you_are_ignoring_content_by_this_member') }}
+                                    <xf:showignored />
+                                </div>
+                            </xf:if>
+
+                            <div class="comment-contentWrapper">
+                                <xf:username user="$comment.User" rich="true" defaultname="{$comment.username}" class="comment-user" />
+                                <div class="message-userContent lbContainer js-lbContainer {{ $comment.isIgnored() ? 'is-ignored' : '' }}"
+                                     data-lb-id="comment-{$comment.comment_id}"
+                                     data-lb-caption-desc="{{ $comment.User ? $comment.User.username : $comment.username }} &middot; {{ date_time($comment.comment_date) }}">
+                                    <article class="comment-body">{{ bb_code($comment.message, 'tl_group_wall_comment', $comment) }}</article>
+
+                                    <xf:if is="$comment.attach_count">
+                                        <xf:macro template="message_macros" name="attachments"
+                                                  arg-attachments="{$comment.Attachments}"
+                                                  arg-message="{$comment}"
+                                                  arg-canView="{{ true }}" />
+                                    </xf:if>
+                                </div>
+                            </div>
+                        </div>
+
+                        <footer class="comment-footer">
+                            <div class="comment-actionBar actionBar">
+                                <div class="actionBar-set actionBar-set--internal">
+                                    <span class="actionBar-action"><xf:date time="{$comment.comment_date}" /></span>
+                                    <xf:if is="$comment.canReport()">
+                                        <a href="{{ link('groups/wall-comments/report', $comment) }}"
+                                           class="actionBar-action actionBar-action--report"
+                                           data-xf-click="overlay">{{ phrase('report') }}</a>
+                                    </xf:if>
+
+                                    <xf:set var="$hasActionBarMenu" value="{{ false }}" />
+                                    <xf:if is="$comment.canEdit()">
+                                        <xf:js src="xf/message.js" min="1" />
+                                        <a href="{{ link('groups/wall-comments/edit', $comment) }}"
+                                           class="actionBar-action actionBar-action--edit actionBar-action--menuItem"
+                                           data-xf-click="quick-edit"
+                                           data-editor-target="#js-comment-{$comment.comment_id} .js-quickEditTargetComment"
+                                           data-menu-closer="true">{{ phrase('edit') }}</a>
+                                        <xf:set var="$hasActionBarMenu" value="{{ true }}" />
+                                    </xf:if>
+                                    <xf:if is="$comment.canDelete('soft')">
+                                        <a href="{{ link('groups/wall-comments/delete', $comment) }}"
+                                           class="actionBar-action actionBar-action--delete actionBar-action--menuItem"
+                                           data-xf-click="overlay">{{ phrase('delete') }}</a>
+                                        <xf:set var="$hasActionBarMenu" value="{{ true }}" />
+                                    </xf:if>
+
+                                    <xf:if is="$hasActionBarMenu">
+                                        <a class="actionBar-action actionBar-action--menuTrigger"
+                                           data-xf-click="menu"
+                                           title="{{ phrase('more_options')|for_attr }}"
+                                           role="button"
+                                           tabindex="0"
+                                           aria-expanded="false"
+                                           aria-haspopup="true">&#8226;&#8226;&#8226;</a>
+                                        <div class="menu" data-menu="menu" aria-hidden="true" data-menu-builder="actionBar">
+                                            <div class="menu-content">
+                                                <h4 class="menu-header">{{ phrase('more_options') }}</h4>
+                                                <div class="js-menuBuilderTarget"></div>
+                                            </div>
+                                        </div>
+                                    </xf:if>
+                                </div>
+                                <xf:if contentcheck="true">
+                                    <div class="actionBar-set actionBar-set--external">
+                                        <xf:contentcheck>
+                                            <xf:if is="$comment.canLike()">
+                                                <a href="{{ link('groups/wall-comments/like', $comment) }}"
+                                                   class="actionBar-action actionBar-action--like" data-xf-click="like"
+                                                   data-like-list="< .comment | .js-commentLikeList"><xf:if is="$comment.isLiked()">{{ phrase('unlike') }}<xf:else />{{ phrase('like') }}</xf:if></a>
+                                            </xf:if>
+                                        </xf:contentcheck>
+                                    </div>
+                                </xf:if>
+                            </div>
+
+                            <div class="comment-likes js-commentLikeList {{ $comment.likes ? 'is-active' : '' }}"><xf:if is="$comment.likes">
+                                <xf:likes content="{$comment}" url="{{ link('groups/wall-comments/likes', $comment) }}" />
+                            </xf:if></div>
+                        </footer>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</xf:macro>

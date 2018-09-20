@@ -1,0 +1,16 @@
+<xf:if is="$showLoadMore">
+    <div class="message-responseRow u-jsOnly js-commentLoader">
+        <a data-href="{{ link('groups/wall-posts/load-comments', $post, {'before': $firstComment.position}) }}"
+           data-container=".js-commentLoader"
+           data-xf-click="comment-loader">
+            <i class="fa fa-long-arrow-up" aria-hidden="true"></i>
+            {{ phrase('view_previous_comments...') }}
+        </a>
+    </div>
+</xf:if>
+
+<xf:foreach loop="$comments" value="$comment">
+    <xf:macro template="tl_group_wall_post_macros"
+              name="comment_row"
+              arg-comment="{$comment}" />
+</xf:foreach>

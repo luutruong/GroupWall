@@ -1,0 +1,1 @@
+{name} liked your comment in the group {title}.

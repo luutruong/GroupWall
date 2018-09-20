@@ -1,0 +1,26 @@
+{
+    "tl_group_wall_delete_comment_created_by_x.txt": {
+        "global_cache": false,
+        "version_id": 1000000,
+        "version_string": "1.0.0",
+        "hash": "40789dd30e6777f5edf8545912b3f058"
+    },
+    "tl_group_wall_delete_first_comment_warning.txt": {
+        "global_cache": false,
+        "version_id": 1000000,
+        "version_string": "1.0.0",
+        "hash": "35cc3b16e5f896a08641f4062c136e44"
+    },
+    "tl_group_wall_edit_comment.txt": {
+        "global_cache": false,
+        "version_id": 1000100,
+        "version_string": "1.0.1",
+        "hash": "3216c36604b3d4125718d86bb9b89593"
+    },
+    "tl_group_wall_x_liked_your_comment_in_group_y.txt": {
+        "global_cache": false,
+        "version_id": 1000000,
+        "version_string": "1.0.0",
+        "hash": "5f34c277d9b3238960d0c362bee893f1"
+    }
+}

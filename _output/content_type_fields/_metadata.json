@@ -1,0 +1,14 @@
+{
+    "tl_group_wall_comment-alert_handler_class.json": {
+        "hash": "a9920ad780dfa9ea35d9fe11d214c858"
+    },
+    "tl_group_wall_comment-attachment_handler_class.json": {
+        "hash": "477bbc23fd17a60acdbe71363b9b3af1"
+    },
+    "tl_group_wall_comment-entity.json": {
+        "hash": "375d7a3b515c089770bf09f45de6c3a3"
+    },
+    "tl_group_wall_comment-like_handler_class.json": {
+        "hash": "65b3e1750031f76415c21ec9cce26fbf"
+    }
+}
