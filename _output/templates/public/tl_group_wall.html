@@ -16,16 +16,18 @@
 
     <div class="block-container">
         <div class="block-body">
-            <xf:macro template="quick_reply_macros" name="body"
-                      arg-message=""
-                      arg-attachmentData="{$attachmentData}"
-                      arg-forceHash="{$attachmentHash}"
-                      arg-messageSelector=".js-post"
-                      arg-multiQuoteStorageKey="multiQuoteThread"
-                      arg-lastDate="{$lastPost.post_date}"
-                      arg-showPreviewButton="{{ false }}"
-                      arg-submitText="{{ phrase('post_verb') }}"
-                      arg-lastKnownDate="{$thread.last_post_date}" />
+            <xf:callback class="Truonglv\GroupWall\Callback"
+                         method="getFormPost">
+                <xf:macro template="quick_reply_macros" name="body"
+                          arg-message=""
+                          arg-attachmentData="{$attachmentData}"
+                          arg-forceHash="{$attachmentHash}"
+                          arg-messageSelector=".js-post"
+                          arg-multiQuoteStorageKey=""
+                          arg-lastDate="{$lastPost.post_date}"
+                          arg-showPreviewButton="{{ false }}"
+                          arg-simple="{{ true }}"
+                          arg-submitText="{{ phrase('post_verb') }}" /></xf:callback>
         </div>
     </div>
 

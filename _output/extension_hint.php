@@ -5,7 +5,5 @@
 
 namespace Truonglv\GroupWall\Groups\Pub\Controller
 {
-    class XFCP_Group extends \Truonglv\Groups\Pub\Controller\Group
-    {
-    }
+	class XFCP_Group extends \Truonglv\Groups\Pub\Controller\Group {}
 }

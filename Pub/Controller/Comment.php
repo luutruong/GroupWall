@@ -69,6 +69,8 @@ class Comment extends AbstractController
                 $comments = [
                     $comment->comment_id => $comment
                 ];
+                $comments = $this->em()->getBasicCollection($comments);
+
                 $attachRepo->addAttachmentsToContent($comments, Listener::CONTENT_TYPE_COMMENT);
 
                 if ($comment->isFirstComment()) {

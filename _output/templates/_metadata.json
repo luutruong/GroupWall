@@ -1,8 +1,8 @@
 {
     "public/tl_group_wall.html": {
-        "version_id": 1000000,
-        "version_string": "1.0.0",
-        "hash": "39d6f4bee8e29e176924833043af3e05"
+        "version_id": 1000100,
+        "version_string": "1.0.1",
+        "hash": "255303c8853991b0bfd0757a15c6dc59"
     },
     "public/tl_group_wall_alert_comment_like.html": {
         "version_id": 1000000,
