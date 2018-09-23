@@ -94,6 +94,8 @@ class Group extends XFCP_Group
         $postRepo = $this->repository('Truonglv\GroupWall:Post');
         $categoryList = $postRepo->getCategoryList($group);
 
+        unset($categoryList[Listener::DEFAULT_POST_CATEGORY_ID]);
+
         if ($this->isPost()) {
             $filtered = $this->filter([
                 'existing' => 'array',
@@ -101,10 +103,6 @@ class Group extends XFCP_Group
             ]);
 
             foreach ($filtered['existing'] as $categoryId => $categoryTitle) {
-                if ($categoryId == Listener::DEFAULT_POST_CATEGORY_ID) {
-                    continue;
-                }
-
                 if (!isset($categoryList[$categoryId])) {
                     continue;
                 }

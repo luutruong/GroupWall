@@ -13,7 +13,6 @@
                         <li style="margin-bottom:10px">
                             <xf:textbox name="existing[{$category.category_id}]"
                                         value="{$category.category_title}"
-                                        disabled="{{ $category.canEdit() ? 1 : 0}}"
                                         maxlength="{{ max_length($category, 'category_title') }}" />
                         </li>
                     </xf:foreach>

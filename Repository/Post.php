@@ -22,10 +22,11 @@ class Post extends Repository
         $finder = $this->finder('Truonglv\GroupWall:Post');
 
         $finder->where('group_id', $group->group_id);
-        if (GlobalStatic::getOption('enableWallCategories')) {
-            $finder->where('category_id', $category ? $category->category_id : Listener::DEFAULT_POST_CATEGORY_ID);
-        } else {
-            $finder->where('category_id', Listener::DEFAULT_POST_CATEGORY_ID);
+        if (GlobalStatic::getOption('enableWallCategories')
+            && $category
+            && $category->category_id !== Listener::DEFAULT_POST_CATEGORY_ID
+        ) {
+            $finder->where('category_id', $category->category_id);
         }
 
         $finder->with('User');
