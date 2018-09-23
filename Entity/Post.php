@@ -27,6 +27,7 @@ use Truonglv\Groups\Entity\Group;
  * @property int last_comment_date
  * @property int post_date
  * @property array comment_cache
+ * @property int category_id
  *
  * @property Group Group
  * @property User User
@@ -183,7 +184,9 @@ class Post extends Entity
             'last_comment_date' => ['type' => self::UINT, 'default' => 0],
 
             'post_date' => ['type' => self::UINT, 'default' => \XF::$time],
-            'comment_cache' => ['type' => self::JSON_ARRAY, 'default' => []]
+            'comment_cache' => ['type' => self::JSON_ARRAY, 'default' => []],
+
+            'category_id' => ['type' => self::UINT, 'default' => Listener::DEFAULT_POST_CATEGORY_ID]
         ];
 
         $structure->relations = [

@@ -64,8 +64,18 @@ class Post extends AbstractController
         }
 
         if ($post === null) {
+            $categoryId = $this->filter('category_id', 'uint');
+            if (empty($categoryId)) {
+                $categoryId = Listener::DEFAULT_POST_CATEGORY_ID;
+            }
+
+            $categoryList = $this->postRepo()->getCategoryList($group);
+            if (!isset($categoryList[$categoryId])) {
+                return $this->noPermission();
+            }
+
             /** @var Creator $service*/
-            $service = $this->service('Truonglv\GroupWall:Post\Creator', $group);
+            $service = $this->service('Truonglv\GroupWall:Post\Creator', $group, $categoryList[$categoryId]);
         } else {
             /** @var Commenter $commenter */
             $service = $this->service('Truonglv\GroupWall:Post\Commenter', $post);

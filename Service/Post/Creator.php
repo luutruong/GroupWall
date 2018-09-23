@@ -12,6 +12,7 @@ use Truonglv\Groups\Entity\Group;
 use Truonglv\GroupWall\Entity\Post;
 use Truonglv\GroupWall\Entity\Comment;
 use XF\Service\ValidateAndSavableTrait;
+use Truonglv\GroupWall\Entity\PostCategory;
 use Truonglv\GroupWall\Service\Comment\Preparer;
 
 class Creator extends AbstractService
@@ -19,6 +20,8 @@ class Creator extends AbstractService
     use ValidateAndSavableTrait;
 
     protected $group;
+
+    protected $postCategory;
 
     /**
      * @var Post
@@ -40,11 +43,13 @@ class Creator extends AbstractService
      */
     protected $commentPreparer;
 
-    public function __construct(\XF\App $app, Group $group)
+    public function __construct(\XF\App $app, Group $group, PostCategory $category)
     {
         parent::__construct($app);
 
         $this->group = $group;
+        $this->postCategory = $category;
+
         $this->setUser(\XF::visitor());
 
         $this->setupDefaults();
@@ -74,6 +79,7 @@ class Creator extends AbstractService
         /** @var Post $post */
         $post = $this->em()->create('Truonglv\GroupWall:Post');
         $post->group_id = $this->group->group_id;
+        $post->category_id = $this->postCategory->category_id;
 
         $comment = $post->getNewComment();
         $post->addCascadedSave($comment);

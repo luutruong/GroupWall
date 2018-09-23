@@ -8,8 +8,10 @@ namespace Truonglv\GroupWall\Groups\Pub\Controller;
 
 use XF\Mvc\ParameterBag;
 use XF\Repository\Attachment;
+use Truonglv\GroupWall\Listener;
 use Truonglv\Groups\GlobalStatic;
 use Truonglv\GroupWall\Repository\Post;
+use Truonglv\GroupWall\Entity\PostCategory;
 
 class Group extends XFCP_Group
 {
@@ -23,10 +25,20 @@ class Group extends XFCP_Group
         $page = $this->filterPage();
         $perPage = 20;
 
+        $selectedCategory = $this->filter('category_id', 'uint');
+        if (empty($selectedCategory)) {
+            $selectedCategory = Listener::DEFAULT_POST_CATEGORY_ID;
+        }
+
         /** @var Post $postRepo */
         $postRepo = $this->repository('Truonglv\GroupWall:Post');
 
-        $finder = $postRepo->findPostsForList($group);
+        $categoryList = $postRepo->getCategoryList($group);
+        if (!isset($categoryList[$selectedCategory])) {
+            return $this->noPermission();
+        }
+
+        $finder = $postRepo->findPostsForList($group, $categoryList[$selectedCategory]);
 
         $total = $finder->total();
         $posts = $finder->limitByPage($page, $perPage)->fetch();
@@ -45,9 +57,6 @@ class Group extends XFCP_Group
         /** @var Attachment $attachmentRepo */
         $attachmentRepo = $this->repository('XF:Attachment');
 
-
-//        $attachmentRepo->addAttachmentsToContent($posts, 'tl_group_wall_comment');
-
         if ($group->canUploadAndManageAttachments()) {
             $attachmentData = $attachmentRepo->getEditorData(
                 'tl_group_wall_comment',
@@ -64,7 +73,74 @@ class Group extends XFCP_Group
             'page' => $page,
             'perPage' => $perPage,
             'attachmentHash' => $attachmentHash,
-            'attachmentData' => $attachmentData
+            'attachmentData' => $attachmentData,
+            'categoryList' => $categoryList,
+            'selectedCategory' => $selectedCategory
+        ]);
+    }
+
+    public function actionPostCategory(ParameterBag $paramBag)
+    {
+        /** @var \Truonglv\GroupWall\Groups\Entity\Group $group */
+        $group = GlobalStatic::assertionPlugin($this)
+            ->assertGroupViewable($paramBag);
+
+        $error = null;
+        if (!$group->canManagePostCategory($error)) {
+            return $this->noPermission();
+        }
+
+        /** @var Post $postRepo */
+        $postRepo = $this->repository('Truonglv\GroupWall:Post');
+        $categoryList = $postRepo->getCategoryList($group);
+
+        if ($this->isPost()) {
+            $filtered = $this->filter([
+                'existing' => 'array',
+                'new' => 'array'
+            ]);
+
+            foreach ($filtered['existing'] as $categoryId => $categoryTitle) {
+                if ($categoryId == Listener::DEFAULT_POST_CATEGORY_ID) {
+                    continue;
+                }
+
+                if (!isset($categoryList[$categoryId])) {
+                    continue;
+                }
+
+                /** @var PostCategory $category */
+                $category = $categoryList[$categoryId];
+                $categoryTitle = utf8_trim($categoryTitle);
+
+                if (empty($categoryTitle)) {
+                    $category->delete();
+                } else {
+                    $category->category_title = $categoryTitle;
+                    $category->save();
+                }
+            }
+
+            // save new items
+            foreach ($filtered['new'] as $newCategoryTitle) {
+                $newCategoryTitle = utf8_trim($newCategoryTitle);
+                if (empty($newCategoryTitle)) {
+                    continue;
+                }
+
+                /** @var PostCategory $category */
+                $category = $this->em()->create('Truonglv\GroupWall:PostCategory');
+                $category->category_title = $newCategoryTitle;
+                $category->group_id = $group->group_id;
+                $category->save();
+            }
+
+            return $this->redirect($this->buildLink('groups/feeds', $group));
+        }
+
+        return $this->view('Truonglv\GroupWall:Post\Category', 'tl_group_wall_post_category', [
+            'group' => $group,
+            'categoryList' => $categoryList
         ]);
     }
 }

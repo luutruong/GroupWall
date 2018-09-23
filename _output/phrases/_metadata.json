@@ -1,4 +1,28 @@
 {
+    "option.tl_groups_enableWallCategories.txt": {
+        "global_cache": false,
+        "version_id": 1000200,
+        "version_string": "1.0.2",
+        "hash": "f4d0c7903611aa36b9583dc9a8afb7ed"
+    },
+    "option_explain.tl_groups_enableWallCategories.txt": {
+        "global_cache": false,
+        "version_id": 1000200,
+        "version_string": "1.0.2",
+        "hash": "d113db2d8ff7faeddb4b757b0de22c89"
+    },
+    "tl_group_wall_categories.txt": {
+        "global_cache": false,
+        "version_id": 1000200,
+        "version_string": "1.0.2",
+        "hash": "af1b98adf7f686b84cd0b443e022b7a0"
+    },
+    "tl_group_wall_default_category_title.txt": {
+        "global_cache": true,
+        "version_id": 1000200,
+        "version_string": "1.0.2",
+        "hash": "56b447319d9986ccddd673ca3d314aae"
+    },
     "tl_group_wall_delete_comment_created_by_x.txt": {
         "global_cache": false,
         "version_id": 1000000,
@@ -16,6 +40,18 @@
         "version_id": 1000100,
         "version_string": "1.0.1",
         "hash": "3216c36604b3d4125718d86bb9b89593"
+    },
+    "tl_group_wall_manage_post_category.txt": {
+        "global_cache": false,
+        "version_id": 1000200,
+        "version_string": "1.0.2",
+        "hash": "16b3830c660cc680e305370e305735e8"
+    },
+    "tl_group_wall_new_category_title.txt": {
+        "global_cache": false,
+        "version_id": 1000200,
+        "version_string": "1.0.2",
+        "hash": "a9ebf263f855ae01a19c689079680465"
     },
     "tl_group_wall_x_liked_your_comment_in_group_y.txt": {
         "global_cache": false,

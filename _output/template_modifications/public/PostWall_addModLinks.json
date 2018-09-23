@@ -1,0 +1,9 @@
+{
+    "template": "tl_groups_group_macros",
+    "description": "PostWall_addModLinks",
+    "execution_order": 10,
+    "enabled": true,
+    "action": "str_replace",
+    "find": "<xf:if is=\"$group.canFeatureUnfeature()\">",
+    "replace": "<xf:if is=\"$group.canManagePostCategory()\">\n\t<a href=\"{{ link('groups/post-category', $group) }}\"\n       class=\"menu-linkRow\">{{ phrase('tl_group_wall_manage_post_category') }}</a>\n</xf:if>\n$0"
+}

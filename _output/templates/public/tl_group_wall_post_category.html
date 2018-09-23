@@ -1,0 +1,34 @@
+<xf:title>{{ phrase('tl_group_wall_manage_post_category') }}</xf:title>
+
+<xf:wrap template="tl_groups_group_wrapper">
+    <xf:set var="$pageSelected">feeds</xf:set>
+</xf:wrap>
+
+<xf:form action="{{ link('groups/post-category', $group) }}" ajax="true" class="block">
+    <div class="block-container">
+        <div class="block-body">
+            <ol class="listPlain">
+                <xf:formrow label="{{ phrase('tl_group_wall_categories') }}">
+                    <xf:foreach loop="$categoryList" value="$category">
+                        <li style="margin-bottom:10px">
+                            <xf:textbox name="existing[{$category.category_id}]"
+                                        value="{$category.category_title}"
+                                        disabled="{{ $category.canEdit() ? 1 : 0}}"
+                                        maxlength="{{ max_length($category, 'category_title') }}" />
+                        </li>
+                    </xf:foreach>
+
+                    <li style="margin-bottom:10px"
+                        data-xf-init="field-adder"
+                        data-increment-format="new[{counter}]">
+                        <xf:textbox name="new[0]" value=""
+                                    placeholder="{{ phrase('tl_group_wall_new_category_title') }}"
+                                    maxlength="{{ max_length('Truonglv\GroupWall:PostCategory', 'category_title') }}" />
+                    </li>
+                </xf:formrow>
+            </ol>
+        </div>
+
+        <xf:submitrow icon="save" />
+    </div>
+</xf:form>

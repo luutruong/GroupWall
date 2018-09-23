@@ -32,6 +32,7 @@
     </div>
 
     <xf:hiddenval name="group_id">{$group.group_id}</xf:hiddenval>
+    <xf:hiddenval name="category_id">{$selectedCategory}</xf:hiddenval>
 </xf:form>
 
 <xf:macro template="lightbox_macros" name="setup" arg-canViewAttachments="{{ true }}" />
@@ -39,6 +40,25 @@
 <div class="block block--messages" data-xf-init="{{ $canInlineMod ? 'inline-mod' : '' }}"
      data-type="tl_group_wall_post"
      data-href="{{ link('inline-mod') }}">
+    <xf:if is="$categoryList.count() > 1">
+        <div class="block-outer">
+            <h2 class="block-tabHeader block-tabHeader--memberTabs tabs hScroller"
+                data-xf-init="tabs h-scroller"
+                data-panes=".js-memberTabPanes"
+                data-state="replace"
+                role="tablist">
+                <span class="hScroller-scroll">
+                    <xf:foreach loop="$categoryList" value="$category">
+                        <a href="{{ link('groups/feeds', $group, {'category_id': $category.category_id}) }}"
+                           class="tabs-tab{{ ($selectedCategory == $category.category_id) ? ' is-active' : '' }}"
+                           role="tab"
+                           aria-controls="profile-posts">{$category.getTitle()}</a>
+                    </xf:foreach>
+                </span>
+            </h2>
+        </div>
+    </xf:if>
+
     <div class="block-container lbContainer"
          data-xf-init="lightbox"
          data-message-selector=".js-post"

@@ -10,16 +10,24 @@ use XF\Mvc\Entity\Repository;
 use XF\Repository\Attachment;
 use Truonglv\GroupWall\Listener;
 use Truonglv\Groups\Entity\Group;
+use Truonglv\Groups\GlobalStatic;
 use XF\Mvc\Entity\ArrayCollection;
 use Truonglv\GroupWall\Entity\Comment;
+use Truonglv\GroupWall\Entity\PostCategory;
 
 class Post extends Repository
 {
-    public function findPostsForList(Group $group)
+    public function findPostsForList(Group $group, PostCategory $category = null)
     {
         $finder = $this->finder('Truonglv\GroupWall:Post');
 
         $finder->where('group_id', $group->group_id);
+        if (GlobalStatic::getOption('enableWallCategories')) {
+            $finder->where('category_id', $category ? $category->category_id : Listener::DEFAULT_POST_CATEGORY_ID);
+        } else {
+            $finder->where('category_id', Listener::DEFAULT_POST_CATEGORY_ID);
+        }
+
         $finder->with('User');
 
         $finder->setDefaultOrder('last_comment_date', 'DESC');
@@ -85,5 +93,25 @@ class Post extends Repository
 
             $post->hydrateRelation('Comments', $postComments);
         }
+    }
+
+    public function getCategoryList(Group $group)
+    {
+        $defaultCategoryId = Listener::DEFAULT_POST_CATEGORY_ID;
+
+        if (!GlobalStatic::getOption('enableWallCategories')) {
+            return $this->em->getBasicCollection([
+                $defaultCategoryId => $this->em->find('Truonglv\GroupWall:PostCategory', $defaultCategoryId)
+            ]);
+        }
+
+        $finder = $this->finder('Truonglv\GroupWall:PostCategory');
+
+        $finder->whereOr(
+            ['category_id', '=', $defaultCategoryId],
+            ['group_id', '=', $group->group_id]
+        );
+
+        return $finder->fetch();
     }
 }

@@ -1,0 +1,6 @@
+{
+    "from_class": "Truonglv\\Groups\\Entity\\Group",
+    "to_class": "Truonglv\\GroupWall\\Groups\\Entity\\Group",
+    "execute_order": 10,
+    "active": true
+}

@@ -1,0 +1,1 @@
+If enabled group owner can create multiple wall category.
