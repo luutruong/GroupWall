@@ -210,6 +210,9 @@ class Comment extends Entity implements RenderableContentInterface, QuotableInte
                 },
 
                 'checkForUpdates' => ['message_state']
+            ],
+            'XF:Indexable' => [
+                'checkForUpdates' => ['message', 'user_id', 'post_id', 'comment_date', 'message_state']
             ]
         ];
 
