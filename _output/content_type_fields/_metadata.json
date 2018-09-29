@@ -10,5 +10,8 @@
     },
     "tl_group_wall_comment-like_handler_class.json": {
         "hash": "65b3e1750031f76415c21ec9cce26fbf"
+    },
+    "tl_group_wall_comment-search_handler_class.json": {
+        "hash": "58ba006d35d32b69550470f6da3721dd"
     }
 }
