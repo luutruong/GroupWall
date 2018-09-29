@@ -14,6 +14,16 @@ use XF\Search\MetadataStructure;
 
 class Comment extends AbstractData
 {
+    public function getEntityWith($forView = false)
+    {
+        $with = ['Post', 'Post.Group'];
+        if ($forView) {
+            $with[] = 'User';
+        }
+
+        return $with;
+    }
+
     public function getResultDate(Entity $entity)
     {
         if (!($entity instanceof \Truonglv\GroupWall\Entity\Comment)) {
