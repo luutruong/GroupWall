@@ -43,5 +43,10 @@
         "version_id": 1000100,
         "version_string": "1.0.1",
         "hash": "16f9320fbeb4433182ada34bb971d1dc"
+    },
+    "public/tl_group_wall_search_result_comment.html": {
+        "version_id": 1000302,
+        "version_string": "1.0.3b",
+        "hash": "2e9a405c243d6aeb1b0cf91c0593011e"
     }
 }

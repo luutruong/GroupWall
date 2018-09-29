@@ -1,0 +1,30 @@
+<li class="block-row block-row--separated {{ $comment.isIgnored() ? 'is-ignored' : '' }} js-inlineModContainer"
+    data-author="{{ $comment.User.username ?: $post.username }}">
+    <div class="contentRow">
+		<span class="contentRow-figure">
+			<xf:avatar user="{$comment.User}" size="s" defaultname="{$comment.username}" />
+		</span>
+        <div class="contentRow-main">
+            <h3 class="contentRow-title">
+                <a href="{{ link('groups/wall-comments', $comment) }}">{{  highlight($comment.Post.Group.name, $options.term) }}</a>
+            </h3>
+
+            <div class="contentRow-snippet">{{ snippet($comment.message, 300, {'term': $options.term, 'stripQuote': true}) }}</div>
+
+            <div class="contentRow-minor contentRow-minor--hideLinks">
+                <ul class="listInline listInline--bullet">
+                    <xf:if is="$options.mod == 'post' && $comment.canUseInlineModeration()">
+                        <li><xf:checkbox standalone="true">
+                            <xf:option value="{$comment.comment_id}" class="js-inlineModToggle"
+                                       data-xf-init="tooltip"
+                                       title="{{ phrase('select_for_moderation') }}" />
+                        </xf:checkbox></li>
+                    </xf:if>
+                    <li><xf:username user="{$comment.User}" defaultname="{$comment.username}" /></li>
+                    <li><xf:date time="{$comment.comment_date}" /></li>
+                    <li>{{ phrase('tl_group_wall_in_group:') }} <a href="{{ link('groups', $comment.Post.Group) }}">{$comment.Post.Group.name}</a></li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</li>

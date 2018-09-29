@@ -24,6 +24,11 @@ class Comment extends AbstractData
         return $with;
     }
 
+    public function getTemplateName()
+    {
+        return 'public:tl_group_wall_search_result_comment';
+    }
+
     public function getResultDate(Entity $entity)
     {
         if (!($entity instanceof \Truonglv\GroupWall\Entity\Comment)) {

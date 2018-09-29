@@ -41,6 +41,12 @@
         "version_string": "1.0.1",
         "hash": "3216c36604b3d4125718d86bb9b89593"
     },
+    "tl_group_wall_in_group.txt": {
+        "global_cache": false,
+        "version_id": 1000302,
+        "version_string": "1.0.3b",
+        "hash": "338b03f0583fe4a764a3a05f30a40ae2"
+    },
     "tl_group_wall_manage_post_category.txt": {
         "global_cache": false,
         "version_id": 1000200,
