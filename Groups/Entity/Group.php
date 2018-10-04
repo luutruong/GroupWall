@@ -29,4 +29,20 @@ class Group extends XFCP_Group
 
         return $member->isOwner();
     }
+
+    public function canPostFeeds(&$error = null)
+    {
+        $visitor = \XF::visitor();
+        if (!$visitor->user_id) {
+            return false;
+        }
+
+        /** @var Member|null $member */
+        $member = $this->Member;
+        if (!$member) {
+            return false;
+        }
+
+        return $member->isValidMember();
+    }
 }

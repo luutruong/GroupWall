@@ -12,6 +12,7 @@ use XF\ControllerPlugin\Editor;
 use Truonglv\GroupWall\Listener;
 use Truonglv\Groups\GlobalStatic;
 use XF\Pub\Controller\AbstractController;
+use Truonglv\GroupWall\Groups\Entity\Group;
 use Truonglv\GroupWall\Service\Post\Creator;
 use Truonglv\GroupWall\Service\Post\Commenter;
 
@@ -58,8 +59,13 @@ class Post extends AbstractController
 
             $group = $post->Group;
         } else {
+            /** @var Group $group */
             $group = GlobalStatic::assertionPlugin($this)
                 ->assertGroupViewable($this->filter('group_id', 'uint'), [], true);
+            if (!$group->canPostFeeds($error)) {
+                return $this->noPermission($error);
+            }
+            
             $post = null;
         }
 
