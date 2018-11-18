@@ -55,6 +55,14 @@ class Creator extends AbstractService
         $this->setupDefaults();
     }
 
+    /**
+     * @return Post
+     */
+    public function getPost()
+    {
+        return $this->post;
+    }
+
     public function setAttachmentHash($attachmentHash)
     {
         $this->commentPreparer->setAttachmentHash($attachmentHash);
@@ -63,6 +71,19 @@ class Creator extends AbstractService
     public function setMessage($message, $format = true)
     {
         return $this->commentPreparer->setMessage($message, $format);
+    }
+
+    public function setPostState($state)
+    {
+        switch ($state) {
+            case 'visible':
+            case 'moderated':
+            case 'deleted':
+                $this->comment->message_state = $state;
+                break;
+            default:
+                throw new \InvalidArgumentException('Unknown post state (' . $state . ')');
+        }
     }
 
     protected function setUser(User $user)
