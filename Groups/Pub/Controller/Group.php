@@ -35,6 +35,10 @@ class Group extends XFCP_Group
 
         $categoryList = $postRepo->getCategoryList($group);
         if (!isset($categoryList[$selectedCategory])) {
+            if ($selectedCategory === Listener::DEFAULT_POST_CATEGORY_ID) {
+                throw new \LogicException('Default category not exists.');
+            }
+            
             return $this->noPermission();
         }
 
