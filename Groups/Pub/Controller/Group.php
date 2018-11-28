@@ -38,7 +38,7 @@ class Group extends XFCP_Group
             if ($selectedCategory === Listener::DEFAULT_POST_CATEGORY_ID) {
                 throw new \LogicException('Default category not exists.');
             }
-            
+
             return $this->noPermission();
         }
 
